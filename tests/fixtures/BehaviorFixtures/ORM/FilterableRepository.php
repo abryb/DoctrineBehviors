@@ -2,34 +2,63 @@
 
 namespace BehaviorFixtures\ORM;
 
-use Knp\DoctrineBehaviors\ORM\Filterable;
+use Abryb\DoctrineBehaviors\ORM\Filterable\FilterableRepositoryInterface;
+use Abryb\DoctrineBehaviors\ORM\Filterable\FilterableRepositoryTrait;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 
 /**
  * @author     Leszek Prabucki <leszek.prabucki@gmail.com>
  */
-class FilterableRepository extends EntityRepository
+class FilterableRepository extends EntityRepository implements FilterableRepositoryInterface
 {
-    use Filterable\FilterableRepository;
+    use FilterableRepositoryTrait;
 
-    public function getILikeFilterColumns()
+    /**
+     * Function to override settings
+     *
+     * @return array
+     */
+    protected static function setFilterableSettings() : array
     {
-        return [];
+        return array();
     }
 
-    public function getLikeFilterColumns()
+    /**
+     * Filterable settings
+     *
+     * @return array
+     */
+    protected function getFilterableSettings() : array
     {
-        return ['e:name'];
+        return array_merge($this::$filterableSettings, $this::setFilterableSettings());
     }
 
-    public function getEqualFilterColumns()
+    /**
+     * @return array
+     */
+    public static function getDefinedFilters(): array
     {
-        return ['e:code'];
+        return array();
     }
 
-    public function getInFilterColumns()
+    /**
+     * @return array
+     */
+    public static function getBlockedFilters(): array
     {
-        return [];
+        return array();
+    }
+
+    /**
+     * @param QueryBuilder $qb
+     * @param $filterName
+     * @param $value
+     * @return mixed
+     */
+    public function applyDefinedFilter(QueryBuilder $qb, $filterName, $value)
+    {
+
     }
 }
 
